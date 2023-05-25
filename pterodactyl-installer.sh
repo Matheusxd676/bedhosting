@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Informações do MySQL
+read -p "Digite o nome da tabela MySQL que você gostaria de usar: " db_table
+read -p "Digite o nome do usuário MySQL: " db_user
+read -s -p "Digite a senha do usuário MySQL: " db_pass
+echo
+
+# Informações do painel Pterodactyl
+read -p "Digite o nome de usuário para o painel Pterodactyl: " ptero_user
+read -p "Digite o email para o painel Pterodactyl: " ptero_email
+read -p "Digite o nome para o painel Pterodactyl: " ptero_fname
+read -p "Digite o sobrenome para o painel Pterodactyl: " ptero_lname
+read -s -p "Digite a senha para o painel Pterodactyl: " ptero_pass
+echo
+
 # Atualizar o sistema
 sudo apt update
 sudo apt upgrade -y
@@ -28,3 +42,17 @@ apt -y install php8.1 php8.1-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,z
 
 # Instalar composer
 
+echo yes | curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+# Baixar e criar pastas do painel Pterodactyl
+
+mkdir -p /var/www/pterodactyl
+cd /var/www/pterodactyl
+
+# Extrair e dar as permissão
+
+curl -Lo panel.tar.gz https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz
+tar -xzvf panel.tar.gz
+chmod -R 755 storage/* bootstrap/cache/
+
+# Configurar banco de dados
